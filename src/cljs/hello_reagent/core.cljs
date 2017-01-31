@@ -105,16 +105,70 @@
      [:p (pr-str @sorted-rolls)]
      [:p (pr-str (reverse @sorted-rolls))]])
 
+;;-----------------------------------------
+;;Hello Functions
+;;----------------------------------------
+
+     (defn greetings []
+       (fn []
+         [:h3 "Hello world, Clojurian"]))
+
+
+
+;;-----------------------------------------
+;;mouse trap function
+;;----------------------------------------
+
+     (defn a-better-mouse-trap [mouse]
+       (let [mice (reagent/atom 1)]
+         (fn render-mouse-trap [mouse]
+           (into
+             [:div
+              [:button
+               {:on-click
+                (fn [e]
+                  (swap! mice (fn [m] (inc (mod m 4)))))}
+               "Catch!"]]
+             (repeat @mice mouse)))))
+
+  (defn lambda [rotation x y]
+    [:g {:transform (str "translate(" x "," y ")"
+                       "rotate(" rotation ") ")}
+   [:circle {:r 50, :fill "red"}]
+   [:circle {:r 25, :fill "black"}]
+
+   [:path {:stroke-width 12
+           :stroke "white"
+           :fill "none"
+           :d "M -45,-35 C 25,-35 -25,35 45,35 M 0,0 -45,45"}]])
+
+(defn spinnable []
+  (reagent/with-let [rotation (reagent/atom 0)]
+    [:svg
+     {:width 150 :height 150
+      :on-mouse-move
+      (fn [e]
+        (swap! rotation + 30))}
+     [lambda @rotation 75 75]]))
+
+(defn several-spinnables []
+  [:div
+   [:h3 "Move your mouse over me"]
+   [a-better-mouse-trap [spinnable]]])
 
   (defn main-panel []
     [:div
       [:center
 
+
+        [several-spinnables]
         [:h1 "Clojure"]
+        [greetings]
         [:h2 "What do you think about ?"]
         [many-circles]
         [counter]
         [sorted-d20]
+
 
 
         [:form
@@ -128,7 +182,21 @@
                          :type "text"
                          :default-value "Tell me"}]]
                          [:input
-                          {:type "submit"}]]]])
+                          {:type "submit"}]]]
+
+
+
+
+                          [:div
+                            [a-better-mouse-trap
+                            [:img
+                              {:src "https://www.domyownpestcontrol.com/images/content/mouse.jpg"
+                               :style {:width "150px" :border "1px solid"}}]]
+                            [:div
+                              [a-better-mouse-trap
+                                [:img
+                                  {:src "https://avatars1.githubusercontent.com/u/9254615?v=3&s=150"
+                                   :style {:border "1px solid"}}]]]]])
 
 
 )
